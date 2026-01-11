@@ -1,0 +1,1 @@
+There is version 6 of L5PCbiophys, in github.com/EilamLeleo/burst, that includes a small change in g_SK

@@ -1,0 +1,6 @@
+Note:
+*) This is not exactly the code appearing in https://senselab.med.yale.edu/ModelDB/showmodel.cshtml?model=139653#tabs-1
+*) The changes are in L5PCtemplate_2 and L5PCbiophys5b.hoc
+*) The original files are called L5PCtemplate.hoc, L5PCbiophys4.hoc (and are included)
+*) Hence the _2 in the title refers to template_2
+*) The changes are small, mostly in Ih channel amounts and distributions.
