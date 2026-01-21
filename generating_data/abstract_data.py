@@ -15,7 +15,7 @@ import logging
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()))
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 
-from datasets import sequences
+from generating_data import sequences
 
 from utils.utils import setup_logger
 

@@ -21,9 +21,9 @@ try:
 except ImportError:
     firwin = lfilter = None  # fallback later
 
-from datasets.filter_dataset import FilterLabelsDataset, FilterItemsDataset
-from datasets.hmax import HMAX
-from datasets import sequences
+from generating_data.filter_dataset import FilterLabelsDataset, FilterItemsDataset
+from generating_data.hmax import HMAX
+from generating_data import sequences
 
 from utils.utils import setup_logger
 

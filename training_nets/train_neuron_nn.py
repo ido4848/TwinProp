@@ -34,7 +34,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.absolute()))
 
 from utils.roc_utils import window_roc_curve
 from utils.utils import setup_logger, str2bool, ArgumentSaver, AddDefaultInformationAction, AddOutFileAction, TeeAll
-from dnns.expressive_leaky_memory_neuron import ELM
+from training_nets.expressive_leaky_memory_neuron import ELM
 
 
 logger = logging.getLogger(__name__)
@@ -434,7 +434,7 @@ def train_neuron_nn_on_data(args):
     if args.use_elm:
         network_temporal_extent = 150
     else:
-        raise NotImplementedError("Only ELM model is supported in train_neuron_dnn_twin.py")
+        raise NotImplementedError("Only ELM model is supported in train_neuron_nn.py")
 
     test_name = 'test'
     if args.use_valid_as_test:
@@ -474,7 +474,7 @@ def train_neuron_nn_on_data(args):
 
         model = ELM(**model_config).double()
     else:
-        raise NotImplementedError("Only ELM model is supported in train_neuron_dnn_twin.py")
+        raise NotImplementedError("Only ELM model is supported in train_neuron_nn.py")
 
     logger.info(f"model created: {repr(model)}")
 
@@ -1176,7 +1176,7 @@ def get_nn_training_args():
     saver.add_argument('--use_valid_as_test', type=str2bool, nargs='?', const=True, default=True)
     saver.add_argument('--best_by_normalized', type=str2bool, nargs='?', const=True, default=True)
 
-    saver.add_argument('--use_elm', type=str2bool, nargs='?', const=True, default=False, action=AddDefaultInformationAction)
+    saver.add_argument('--use_elm', type=str2bool, nargs='?', const=True, default=True, action=AddDefaultInformationAction)
 
     # elm parameters
     saver.add_argument('--elm_branch_mode', type=str2bool, nargs='?', const=True, default=False, action=AddDefaultInformationAction)

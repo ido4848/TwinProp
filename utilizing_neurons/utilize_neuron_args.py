@@ -104,8 +104,6 @@ def get_utilize_neuron_args():
     saver.add_argument('--abstract_valid_jitters_end', default=None, type=float, short_name="absVJE")
     saver.add_argument('--abstract_valid_jitters_step', default=None, type=float, short_name="absVJSt")
 
-    saver.add_argument('--spiking_mnist', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--non_spiking_spiking_mnist', type=str2bool, nargs='?', const=True, default=False)
     saver.add_argument('--spiking_cat_and_dog', type=str2bool, nargs='?', const=True, default=False)
     saver.add_argument('--non_spiking_spiking_cat_and_dog', type=str2bool, nargs='?', const=True, default=False)
     saver.add_argument('--spiking_afhq', type=str2bool, nargs='?', const=True, default=False)
@@ -114,26 +112,6 @@ def get_utilize_neuron_args():
     saver.add_argument('--non_spiking_shd', type=str2bool, nargs='?', const=True, default=False)
     saver.add_argument('--ssc', type=str2bool, nargs='?', const=True, default=False)
     saver.add_argument('--non_spiking_ssc', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--spiking_sc', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--non_spiking_spiking_sc', type=str2bool, nargs='?', const=True, default=False)
-
-    # ds selection - spiking regression ds
-    saver.add_argument('--multiplication_task', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--multiplication_random_seed', default=None, type=int)
-    saver.add_argument('--multiplication_variable1_max', default=4, type=int)
-    saver.add_argument('--multiplication_variable2_max', default=4, type=int)
-    saver.add_argument('--multiplication_samples_per_pattern', default=10, type=int)
-
-    # ds selection - spiking time series ds
-    saver.add_argument('--memory_capacity_task', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--memory_capacity_random_seed', default=None, type=int)
-    saver.add_argument('--memory_capacity_count_simulations', default=1000, type=int)
-    saver.add_argument('--memory_capacity_count_output_spikes', default=5, type=int)
-
-
-    # ds selection - no spike ds
-    saver.add_argument('--mnist', type=str2bool, nargs='?', const=True, default=False)
-    saver.add_argument('--cifar10', type=str2bool, nargs='?', const=True, default=False)
 
     # model selection - baselines
     saver.add_argument('--logistic_regression', type=str2bool, nargs='?', const=True, default=False)

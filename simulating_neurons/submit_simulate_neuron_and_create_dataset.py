@@ -16,7 +16,7 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 from utils.status import Status
 from utils.slurm_job import SlurmJobFactory, get_job_submitter_args, get_job_args
 from utils.utils import setup_logger, str2bool, args_to_arg_string, MAXIMAL_RANDOM_SEED, ArgumentSaver, AddDefaultInformationAction, AddOutFileAction, TeeAll
-from simulate_neuron import get_simulation_args
+from simulating_neurons.simulate_neuron import get_simulation_args
 
 import logging
 logger = logging.getLogger(__name__)
@@ -105,6 +105,10 @@ def get_generate_dataset_parser():
     
 def get_args():
     parser = get_generate_dataset_parser()
+
+    saver = get_job_submitter_args()
+    saver.add_to_parser(parser)
+
     return parser.parse_args()
 
 class GenerateDatasetStatus(Status):
@@ -493,7 +497,7 @@ def generate_dataset(args, file_to_run=NEURON_FILE_TO_RUN, extra_arg_string_func
                     extra_arg_string = extra_arg_string_func(args)
                     
                     job_factory.send_job(job_name,\
-                        f"python3 -u {file_to_run} {simulation_arg_string} {input_file_arg_string} {extra_arg_string} --simulation_folder {simulation_folder} --save_plots {simulation_save_plots}",
+                        f"python -u {file_to_run} {simulation_arg_string} {input_file_arg_string} {extra_arg_string} --simulation_folder {simulation_folder} --save_plots {simulation_save_plots}",
                          extra=(state, i),
                           mem=args.cpu_job_memory*1000, use_scontrol=args.use_scontrol,
                            use_finishfile=args.use_finishfile, timelimit=args.simulation_job_timelimit)

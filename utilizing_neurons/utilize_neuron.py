@@ -30,17 +30,18 @@ from sklearn import neural_network
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()))
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 
+from utils.slurm_job import get_job_submitter_args
 from utils.utils import setup_logger, str2bool, ArgumentSaver, AddDefaultInformationAction, AddOutFileAction, TeeAll, MAXIMAL_RANDOM_SEED
-from datasets.to_spikes import GaborMethod, BinarizationMethod
-from datasets.spiking_vision_data import SpikingCatAndDog, NonSpikingSpikingCatAndDog, SpikingAfhq, NonSpikingSpikingAfhq
-from datasets.spiking_audition_data import Shd, NonSpikingShd, Ssc, NonSpikingSsc
-from datasets.abstract_data import NonSpikingAbstract, SpikingAbstract
-from dnns import fully_connected
-from dnns.neuron_nn_wrapper import NeuronNnWrapper
-from dnns.expressive_leaky_memory_neuron import ELM
-from simulations.neuron_simulation_wrapper import NeuronSimulationWrapper
-from utilizations.neuron_utilizer import NeuronUtilizer, DecodingType, UtilizerVerbosity, OptimizerType
-from utilizations.utilize_neuron_args import get_utilize_neuron_args
+from generating_data.to_spikes import GaborMethod, BinarizationMethod
+from generating_data.spiking_vision_data import SpikingCatAndDog, NonSpikingSpikingCatAndDog, SpikingAfhq, NonSpikingSpikingAfhq
+from generating_data.spiking_audition_data import Shd, NonSpikingShd, Ssc, NonSpikingSsc
+from generating_data.abstract_data import NonSpikingAbstract, SpikingAbstract
+from training_nets import fully_connected
+from training_nets.neuron_nn_wrapper import NeuronNnWrapper
+from training_nets.expressive_leaky_memory_neuron import ELM
+from simulating_neurons.neuron_simulation_wrapper import NeuronSimulationWrapper
+from utilizing_neurons.neuron_utilizer import NeuronUtilizer, DecodingType, UtilizerVerbosity, OptimizerType
+from utilizing_neurons.utilize_neuron_args import get_utilize_neuron_args
 
 import logging
 logger = logging.getLogger(__name__)
@@ -112,6 +113,12 @@ def run_sklearn_model(model, ds, args, model_name="logistic_regression", ds_extr
             f.write('finished')
 
     return run_sklearn_model_duration_in_seconds
+
+class PlaceHolderNn(nn.Module):
+    def __init__(self):
+        super(PlaceHolderNn, self).__init__()
+    def forward(self, x):
+        return x
 
 def utilize_neuron_for_task(args):
     logger.info("Going to run utilize model for task with args:")
@@ -572,11 +579,11 @@ def utilize_neuron_for_task(args):
             edited_ckpt = torch.load(args.utilizer_from_checkpoint, map_location=torch.device('cpu'))
 
             # creating a placeholder model
-            elm = ELM(num_input = 1, num_output = 1)
-            elm_state_dict = elm.state_dict()
+            phn = PlaceHolderNn()
+            phn_state_dict = phn.state_dict()
 
             # setting the model to be the placeholder model
-            edited_ckpt['hyper_parameters']['model'] = elm
+            edited_ckpt['hyper_parameters']['model'] = phn
 
             # removing original model state dict entries
             delete_list = []
@@ -588,8 +595,8 @@ def utilize_neuron_for_task(args):
                 del edited_ckpt['state_dict'][key]
 
             # adding the placeholder model state dict entries
-            for key in elm_state_dict.keys():
-                edited_ckpt['state_dict'][f'model.{key}'] = elm_state_dict[key]
+            for key in phn_state_dict.keys():
+                edited_ckpt['state_dict'][f'model.{key}'] = phn_state_dict[key]
 
             # write edited_ckpt into a virtual bytesIO buffer
             edited_ckpt_buffer = io.BytesIO()
@@ -792,6 +799,9 @@ def get_args():
     from utils.slurm_job import get_job_args
     job_saver = get_job_args()
     job_saver.add_to_parser(parser)
+
+    get_job_submitter_args_saver = get_job_submitter_args()
+    get_job_submitter_args_saver.add_to_parser(parser)
 
     saver = get_utilize_neuron_args()
     saver.add_to_parser(parser)

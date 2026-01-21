@@ -13,8 +13,9 @@ import heapq
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()))
 sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 
+from utils.slurm_job import get_job_submitter_args
 from utils.utils import setup_logger, str2bool, ArgumentSaver, AddOutFileAction, TeeAll
-from simulations.submit_simulate_neuron_and_create_dataset import get_generate_dataset_args, generate_dataset
+from simulating_neurons.submit_simulate_neuron_and_create_dataset import get_generate_dataset_args, generate_dataset
 
 import logging
 logger = logging.getLogger(__name__)
@@ -45,6 +46,10 @@ def get_create_dataset_from_input_folder_parser():
     
 def get_args():
     parser = get_create_dataset_from_input_folder_parser()
+
+    saver = get_job_submitter_args()
+    saver.add_to_parser(parser)
+    
     return parser.parse_args()
 
 def create_dataset_from_input_folder(args):

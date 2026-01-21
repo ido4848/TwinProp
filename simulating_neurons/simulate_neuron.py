@@ -20,8 +20,9 @@ sys.path.append(str(pathlib.Path(__file__).parent.parent.absolute()))
 sys.path.append(str(pathlib.Path(__file__).parent.absolute()))
 
 from utils.utils import setup_logger, str2bool, ArgumentSaver, AddOutFileAction, TeeAll, AddDefaultInformationAction
-from dnns.constrained_linear import ConstrainedLinear
-from neuron_models.neuron_plotter import NeuronPlotter, MAX_CM, MIN_CM
+from utils.slurm_job import get_job_args
+from training_nets.constrained_linear import ConstrainedLinear
+from simulating_neurons.neuron_plotter import NeuronPlotter, MAX_CM, MIN_CM
 
 import logging
 logger = logging.getLogger(__name__)
@@ -1977,7 +1978,6 @@ def get_args():
     parser.add_argument('--simulation_folder', action=AddOutFileAction)
     parser.add_argument('--input_file', default=None)
 
-    from utils.slurm_job import get_job_args
     job_saver = get_job_args()
     job_saver.add_to_parser(parser)
     
